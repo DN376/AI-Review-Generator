@@ -1,7 +1,10 @@
-
+# TODO: Merge w/ ChooseStoreAspects.py
+# TODO: Generate the QR Code
+# TODO: move this to mobile
 # This is the entrypoint file and the start screen for users (Frontend)!
 # This'll be fairly barebones. as It's just a screen and a button to proceed to the next pages
 import streamlit as st
+from streamlit_extras.stateful_button import button
 
 # This sets the name of the store (Can be changed for different customers)
 # TODO: Instead of manually setting STORE_NAME, retrieve this from a file (likely .csv but it'll have formatting)
@@ -15,7 +18,7 @@ STORE_NAME = "Gong Cha Davisville"
 # storeName is the name of the business/store. This helps personalize the review & website
 # TODO: make sure that holding the variables like this doesn't introduce some security vulnerabilities
 if 'userOptions' not in st.session_state:
-    st.session_state['userOptions'] = []
+    st.session_state['userOptions'] = set()
 if 'userInput' not in st.session_state:
     st.session_state['userInput'] = """"""
 if 'storeName' not in st.session_state:
@@ -40,11 +43,37 @@ def main():
     """,
         unsafe_allow_html=True,
     )
-    st.title("Thank you for your patronage at " + STORE_NAME + "!")
+    st.title("Thank you for your time at " + st.session_state['storeName'] + "!")
     st.header("Use our guide to automatically create a review.")
+    st.header("First, choose what to review:")
+    st.text("")
 
-    # Makes a button that, when pressed, sends the user to the next screen.
-    st.page_link("pages/ChooseStoreAspects.py", label="Let's make an incredible review together!", icon="🧋")
+    # options is the aspects of the store that the user can decide to review. They have to select at least one aspect
+    # to review, but they can choose any.
+    options = ["Food & Drink", "Atmosphere", "Staff"]
+    # userOptions is which aspects the user will review in the next screen.
+    # A list of booleans where True = will review, False = won't review
+    userOptions = set()
+    # TODO: Change these to buttons instead of checkboxes & line them up horizontally
+    for option in options:
+        if button(option, key=option):
+            userOptions.add(option)
+        else:
+            userOptions.discard(option)
+
+    st.text("")
+    counter = 0
+    # Makes sure that the user has chosen at least one option before letting them move on
+    userOptions
+    # userOptions = list(st.session_state['userOptions'])
+    for op in userOptions:
+        if op:
+            counter += 1
+    if counter != 0:
+        st.session_state['userOptions'] = list(userOptions)
+        st.write("")
+        st.page_link("pages/AskUserQuestions.py", label="Let's make an incredible review together!", icon="🧋")
+
 
 
 main()

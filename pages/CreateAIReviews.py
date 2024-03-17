@@ -1,4 +1,5 @@
 # This acts as a small loading screen for generating the reviews.
+# TODO: Ask Anh Nhan abt loading screen: loading & generating text, OR loading and then making text
 # The frontend shows a small loading screen for users while handling prompt generation and AI responses.
 import os
 from st_copy_to_clipboard import st_copy_to_clipboard
@@ -72,7 +73,7 @@ def main():
             ],
             message=st.session_state['userInput'],
             preamble_override=systemMsg,
-            temperature=0.45
+            temperature=0.5
         )
         st.write("🌟🌟🌟🌟🌟")
         # Displays the review for the customer to choose. By pressing the clipboard button for anny of these reviews,
@@ -82,9 +83,9 @@ def main():
         st_copy_to_clipboard(response.text, key="copy" + str(i))
     my_bar.empty()
     st.balloons()
-    if st.session_state['copy0'] or st.session_state['copy1'] or st.session_state['copy2']:
-        st.link_button("Give us a review on Google!",
-                       "https://www.google.com/search?client=firefox-b-d&q=gong+cha+davisville#lrd=0x882b3320b8abb05b:0xbff654876b9a8f56,3,,,,")
+    # if st.session_state['copy0'] or st.session_state['copy1'] or st.session_state['copy2']:
+    st.link_button("Give us a review on Google!",
+                   "https://www.google.com/search?client=firefox-b-d&q=gong+cha+davisville#lrd=0x882b3320b8abb05b:0xbff654876b9a8f56,3,,,,")
 
 
 main()
