@@ -28,7 +28,7 @@ def main():
     # userOptions is which aspects the user will review in the next screen.
     # A list of booleans where True = will review, False = won't review
     userOptions = []
-    # TODO: Change these to buttons instead of checkboxes
+    # TODO: Change these to buttons instead of checkboxes & line them up horizontally
     for option in options:
         userOptions.append(st.checkbox(option))
     st.text("")
