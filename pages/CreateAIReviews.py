@@ -7,6 +7,13 @@ import cohere
 from dotenv import load_dotenv
 import streamlit as st
 import clipboard
+from streamlit_extras.switch_page_button import switch_page
+
+# if any session variables aren't loaded, send user back to the starting page
+if ('userOptions' not in st.session_state or
+        'userInput' not in st.session_state or
+        'storeName' not in st.session_state):
+    switch_page("GreetingPage")
 
 load_dotenv()
 COHERE_API_KEY = os.getenv('COHERE_API_KEY')
