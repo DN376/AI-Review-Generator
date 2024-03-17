@@ -4,6 +4,13 @@
 # After this, the response will be sent to CreateAIReviews.py for the reviews to be generated.
 
 import streamlit as st
+from streamlit_extras.switch_page_button import switch_page
+
+# if any session variables aren't loaded, send user back to the starting page
+if ('userOptions' not in st.session_state or
+        'userInput' not in st.session_state or
+        'storeName' not in st.session_state):
+    switch_page("GreetingPage")
 
 
 def main():
