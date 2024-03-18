@@ -106,12 +106,10 @@ def showQuestions(question, aspect, options):
     feedback = ""
     traits = ''
     st.header(question)
-    optionsSelected = st.multiselect(label=":red[*required]", options=options)
-    for option in optionsSelected:
-        traits += (option + ", ")
-    traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
-    if traits != ".":
-        feedback += aspect.title() + " Keywords: " + traits
+    selectedAttributes = st.container(border=True)
+    allAttributes = st.container(border=True)
+    selectedAttributes.write("This is where the attributes the user selected go")
+    allAttributes.write("This is where all possible attributes go")
 
     text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
     # For some reason, when the user hasn't input anything into the text box, text is set as True.
