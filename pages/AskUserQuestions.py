@@ -32,7 +32,7 @@ def main():
     atmoOptions = ""
     staffOptions = ""
 
-    st.write(userOptions)
+    # st.write(userOptions)
     # TODO: Change UserOptions to be more than 3 options and many more adjectives
     #  (it needs to match the assumed .csv file) That's gonna be pretty hard... (<_<)
     #  In the future, userOptions may be longer than 3 entries & options will have to be read from a .csv .
@@ -43,32 +43,32 @@ def main():
     canProceed = True
     if "Food & Drink" in userOptions:  # "Food & Drink" Option
         # TODO: Change this to a dropdown menu
-        order = showQuestions("What did you order?", "Order",
-                              ["Pearl Milk Tea", "Brown Sugar Oolong Milk Tea with 2J", "Mango Smoothie",
-                               "Peach Green Tea with QQ Jelly", "3J Earl Grey Milk Tea", "Oreo Coffee Milk Tea",
-                               "Milk Foam Wintermelon Drink", "Wintermelon Milk Tea with Grass Jelly",
-                               "Milk Foam Green Tea",
-                               "Original Bubble Waffle", "Pearl Bubble Waffle"], False)
+        order = displayMenu("What did you order?", "Order",
+                            ["Pearl Milk Tea", "Brown Sugar Oolong Milk Tea with 2J", "Mango Smoothie",
+                             "Peach Green Tea with QQ Jelly", "3J Earl Grey Milk Tea", "Oreo Coffee Milk Tea",
+                             "Milk Foam Wintermelon Drink", "Wintermelon Milk Tea with Grass Jelly",
+                             "Milk Foam Green Tea",
+                             "Original Bubble Waffle", "Pearl Bubble Waffle"])
         fndOptions = showQuestions("How would you describe our store's food and drink?", "Food & Drink",
                                    ["Flavourful", "Refreshing", "Bold", "Yummy", "Excellent", "Delicious",
-                                    "Tasty", "Sweet", "Many Options", "Balanced"], True)
-        st.write(order)
-        st.write(fndOptions)
+                                    "Tasty", "Sweet", "Many Options", "Balanced"])
+        # st.write(order)
+        # st.write(fndOptions)
         if order == "" or fndOptions == "":
             canProceed = False
 
     if "Atmosphere" in userOptions:  # Atmosphere
         atmoOptions = showQuestions("How would you describe our store's atmosphere?", "Atmosphere",
                                     ["Cozy", "Quiet", "Fun", "Great Music", "Clean", "Chic", "Casual",
-                                     "Free Wifi", "Comfy", "Excellent"], True)
-        st.write(atmoOptions)
+                                     "Free Wifi", "Comfy", "Excellent"])
+        # st.write(atmoOptions)
         if atmoOptions == "":
             canProceed = False
     if "Staff" in userOptions:  # Staff
         staffOptions = showQuestions("How would you describe our store's staff?", "Staff",
                                      ["Polite", "Friendly", "Fast Service", "Helpful", "Excellent", "Kind",
-                                      "Patient", "Offered Free Samples", "Great Manager", "Impressive"], True)
-        st.write(staffOptions)
+                                      "Patient", "Offered Free Samples", "Great Manager", "Impressive"])
+        # st.write(staffOptions)
         if staffOptions == "":
             canProceed = False
 
@@ -101,29 +101,46 @@ def main():
 # The feedback will look like this for any aspect:
 #   [Aspect] Keywords: [Selected Keyword 1], [Selected Keyword 2],..., [Final Selected Keyword].
 #   [Aspect] Feedback: [If custom feedback is allowed, the user feedback will be placed here].
-def showQuestions(question, aspect, options, customAllowed):
+def showQuestions(question, aspect, options):
     # Displays the interface for feedback.
     feedback = ""
-    st.header(question)
     traits = ''
-    for option in options:
-        # Displays possible keywords customers can use to describe the store. Users can select multiple keywords at
-        # once, and any selected keywords are added to feedback
-
-        if st.checkbox(option, key=option + aspect):
-            traits += (option + ", ")
+    st.header(question)
+    optionsSelected = st.multiselect(label=":red[*required]", options=options)
+    for option in optionsSelected:
+        traits += (option + ", ")
     traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
     if traits != ".":
         feedback += aspect.title() + " Keywords: " + traits
 
-    if customAllowed:
-        text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
-        # For some reason, when the user hasn't input anything into the text box, text is set as True.
-        # This contradicts Streamlit documentation AND the previous code (it should be None).
-        # I don't know why this happens, but it's a simple fix, so: ???
-        if text != "" and text is not True:
-            feedback += aspect.title() + " Feedback: " + text
+    text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
+    # For some reason, when the user hasn't input anything into the text box, text is set as True.
+    # This contradicts Streamlit documentation AND the previous code (it should be None).
+    # I don't know why this happens, but it's a simple fix, so: ???
+    if text != "" and text is not True:
+        feedback += aspect.title() + " Feedback: " + text
     return feedback
+
+
+def displayMenu(question, aspect, options):
+    order = ""
+    traits = ''
+    st.header(question)
+    optionsSelected = st.multiselect(label=":red[*required]", options=options)
+    for option in optionsSelected:
+        traits += (option + ", ")
+    traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
+    if traits != ".":
+        order += aspect.title() + " Keywords: " + traits
+    return order
+
+
+def dropdown(question):
+    st.expander()
+
+
+def textForDropdown():
+    return ""
 
 
 main()

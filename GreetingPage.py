@@ -64,7 +64,7 @@ def main():
     st.text("")
     counter = 0
     # Makes sure that the user has chosen at least one option before letting them move on
-    userOptions
+    # userOptions
     # userOptions = list(st.session_state['userOptions'])
     for op in userOptions:
         if op:
