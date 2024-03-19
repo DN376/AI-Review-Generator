@@ -1,4 +1,3 @@
-# TODO: Merge w/ ChooseStoreAspects.py
 # TODO: Generate the QR Code
 # TODO: move this to mobile
 # This is the entrypoint file and the start screen for users (Frontend)!
