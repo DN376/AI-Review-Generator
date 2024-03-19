@@ -2,9 +2,11 @@
 # 1. They are given a list of adjectives / keywords with to select
 # 2. They are given a text box where they can type their own response
 # After this, the response will be sent to CreateAIReviews.py for the reviews to be generated.
-
+import random
+from streamlit_extras.stateful_button import button
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+
 
 # if any session variables aren't loaded, send user back to the starting page
 if ('userOptions' not in st.session_state or
@@ -110,6 +112,32 @@ def showQuestions(question, aspect, options):
     allAttributes = st.container(border=True)
     selectedAttributes.write("This is where the attributes the user selected go")
     allAttributes.write("This is where all possible attributes go")
+
+    # Display all possible attributes (options)
+    userSelection = set()
+    index = 0
+    NUM_ATTRIBUTES_PER_LINE = 5
+    numRows = (len(options) + NUM_ATTRIBUTES_PER_LINE - 1) // NUM_ATTRIBUTES_PER_LINE
+    for i in range(numRows):
+        cols = allAttributes.columns(NUM_ATTRIBUTES_PER_LINE)
+        for j in range(min(NUM_ATTRIBUTES_PER_LINE, len(options) - index)):
+            with cols[j]:
+                option = options[index]
+                key = aspect + option
+                # st.write(key)
+                if button(option, key, key=key+"."):
+                # if cols[j].button(option, key):
+                    userSelection.add(option)
+                else:
+                    userSelection.discard(option)
+                index += 1
+    # selectedAttributes.write(st.session_state)
+    for option in userSelection:
+        traits += (option + ", ")
+    traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
+    if traits != ".":
+        feedback += aspect.title() + " Keywords: " + traits
+        selectedAttributes.write("You've Selected: " + traits)
 
     text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
     # For some reason, when the user hasn't input anything into the text box, text is set as True.
