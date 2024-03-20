@@ -1,0 +1,6 @@
+clipboard==0.0.4
+cohere==4.57
+python-dotenv==1.0.1
+st_copy_to_clipboard==0.1.4
+streamlit==1.32.0
+streamlit_extras==0.4.0
