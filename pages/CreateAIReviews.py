@@ -65,7 +65,7 @@ def main():
     # st.write(fewShotUser)
     # st.write(st.session_state['userInput'])
     # Initializes the model (the API key is contained in a .env file so that it remains secret)
-    co = cohere.Client(COHERE_API_KEY)
+    co = cohere.Client("WYbq1RzI3MniGl2xfq6iG0vKC6JeIPUptalaJwcZ")
     NUM_REVIEWS = 3  # The number of reviews that will be generated
     # Displays a "Loading" bar & shows it to the user. Review number changes as reviews are created.
     my_bar = st.progress(0, "Generating Review #1, Please Wait!")
@@ -79,7 +79,7 @@ def main():
                 {"role": "CHATBOT", "message": fewShotAssistant}
             ],
             message=st.session_state['userInput'],
-            preamble_override=systemMsg,
+            preamble=systemMsg,
             temperature=0.5
         )
         st.write("🌟🌟🌟🌟🌟")
