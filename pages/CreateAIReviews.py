@@ -39,7 +39,8 @@ fewShotUser = """Ordered: Mango Smoothie, Bubble Waffle.
 Food & Drink Keywords: Delicious.
 Atmosphere Keywords: Clean.
 Staff Keywords: Friendly, Great Service.
-Staff Feedback: My kids enjoyed it and they want to come back tomorrow."""
+Staff Feedback: My kids enjoyed it and they want to come back tomorrow.
+Tone: Casual."""
 fewShotAssistant = """I went for the first time today, the service was great, the staff is friendly. 
 I ordered a mango smoothie and a waffle (it was delicious). 
 The restaurant was clean. My kids enjoyed the time we spent there and they want to come back tomorrow."""
@@ -78,6 +79,7 @@ def main():
     st.session_state["NUM_REVIEWS"] = NUM_REVIEWS
     # Displays a "Loading" bar & shows it to the user. Review number changes as reviews are created.
     my_bar = st.progress(0, "Generating Review #1, Please Wait!")
+    toneIndicators = ["Casual", "Formal", "Use lots of emojis"]
     for i in range(NUM_REVIEWS):
         my_bar.progress((i / NUM_REVIEWS), text="Generating Review#" + str(i + 1) + ", Please wait!")
         # st.write("Review #" + str(i + 1) + ":")
@@ -87,7 +89,7 @@ def main():
                 {"role": "USER", "message": fewShotUser},
                 {"role": "CHATBOT", "message": fewShotAssistant}
             ],
-            message=st.session_state['userInput'],
+            message=st.session_state['userInput']+"\nTone: "+toneIndicators[i],
             preamble=systemMsg,
             temperature=0.5
         )

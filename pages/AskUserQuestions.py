@@ -44,7 +44,6 @@ def main():
     # TODO: Give the user the option to specify tone for their review (e.g formal, slang, etc.)
     canProceed = True
     if "Food & Drink" in userOptions:  # "Food & Drink" Option
-        # TODO: Change this to a dropdown menu
         order = displayMenu("What did you order?", "Order",
                             ["Pearl Milk Tea", "Brown Sugar Oolong Milk Tea with 2J", "Mango Smoothie",
                              "Peach Green Tea with QQ Jelly", "3J Earl Grey Milk Tea", "Oreo Coffee Milk Tea",
@@ -108,10 +107,11 @@ def showQuestions(question, aspect, options):
     feedback = ""
     traits = ''
     st.header(question)
+    st.write(":red[*required]")
     selectedAttributes = st.container(border=True)
     allAttributes = st.container(border=True)
-    selectedAttributes.write("This is where the attributes the user selected go")
-    allAttributes.write("This is where all possible attributes go")
+    # selectedAttributes.write("This is where the attributes the user selected go")
+    # allAttributes.write("This is where all possible attributes go")
 
     # Display all possible attributes (options)
     userSelection = set()
@@ -137,7 +137,7 @@ def showQuestions(question, aspect, options):
     traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
     if traits != ".":
         feedback += aspect.title() + " Keywords: " + traits
-        selectedAttributes.write("You've Selected: " + traits)
+        # selectedAttributes.write("You've Selected: " + traits)
 
     text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
     # For some reason, when the user hasn't input anything into the text box, text is set as True.
