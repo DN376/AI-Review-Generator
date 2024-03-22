@@ -107,7 +107,7 @@ def main():
     # st.write()
     # st.write(st.session_state["review#3"])
     # nav_to("http://localhost:8502/DisplayEndReviews")
-    st.page_link("pages/DisplayEndReviews.py", label="Let's see the reviews!", icon="🧋")
+    switch_page("DisplayEndReviews")
     # if st.session_state['copy0'] or st.session_state['copy1'] or st.session_state['copy2']:
 
 
