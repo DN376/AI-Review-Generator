@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import streamlit as st
 import clipboard
 from streamlit_extras.switch_page_button import switch_page
+from streamlit_extras.stateful_button import button
 
 # if any session variables aren't loaded, send user back to the starting page
 if ('userOptions' not in st.session_state or
@@ -38,7 +39,8 @@ fewShotUser = """Ordered: Mango Smoothie, Bubble Waffle.
 Food & Drink Keywords: Delicious.
 Atmosphere Keywords: Clean.
 Staff Keywords: Friendly, Great Service.
-Staff Feedback: My kids enjoyed it and they want to come back tomorrow."""
+Staff Feedback: My kids enjoyed it and they want to come back tomorrow.
+Tone: Casual."""
 fewShotAssistant = """I went for the first time today, the service was great, the staff is friendly. 
 I ordered a mango smoothie and a waffle (it was delicious). 
 The restaurant was clean. My kids enjoyed the time we spent there and they want to come back tomorrow."""
@@ -46,8 +48,15 @@ The restaurant was clean. My kids enjoyed the time we spent there and they want 
 
 # TODO: actually finish changing the copy/past function (clipboard/pyperclip instead of st_copy_to_clipboard)
 def on_copy_click(text):
-    st.session_state.copied.append(text)
+    # st.session_state.copied.append(text)
     clipboard.copy(text)
+
+
+def nav_to(url):
+    nav_script = """
+        <meta http-equiv="refresh" content="0; url='%s'">
+    """ % (url)
+    st.write(nav_script, unsafe_allow_html=True)
 
 
 def main():
@@ -65,34 +74,43 @@ def main():
     # st.write(fewShotUser)
     # st.write(st.session_state['userInput'])
     # Initializes the model (the API key is contained in a .env file so that it remains secret)
-    co = cohere.Client("WYbq1RzI3MniGl2xfq6iG0vKC6JeIPUptalaJwcZ")
+    co = cohere.Client(COHERE_API_KEY)
     NUM_REVIEWS = 3  # The number of reviews that will be generated
+    st.session_state["NUM_REVIEWS"] = NUM_REVIEWS
     # Displays a "Loading" bar & shows it to the user. Review number changes as reviews are created.
     my_bar = st.progress(0, "Generating Review #1, Please Wait!")
+    toneIndicators = ["Casual", "Formal", "Use lots of emojis"]
     for i in range(NUM_REVIEWS):
         my_bar.progress((i / NUM_REVIEWS), text="Generating Review#" + str(i + 1) + ", Please wait!")
-        st.write("Review #" + str(i + 1) + ":")
+        # st.write("Review #" + str(i + 1) + ":")
         # TODO: tweak some of the AI features (e.g temperature, max_tokens, etc.)
         response = co.chat(
             chat_history=[
                 {"role": "USER", "message": fewShotUser},
                 {"role": "CHATBOT", "message": fewShotAssistant}
             ],
-            message=st.session_state['userInput'],
+            message=st.session_state['userInput']+"\nTone: "+toneIndicators[i],
             preamble=systemMsg,
             temperature=0.5
         )
-        st.write("🌟🌟🌟🌟🌟")
+        st.session_state["review#"+str(i+1)] = response.text
+        # st.write("🌟🌟🌟🌟🌟")
         # Displays the review for the customer to choose. By pressing the clipboard button for anny of these reviews,
         # they will copy it and a button will appear leading to a Google Review page.
         # TODO: Potentially link to Yelp or other review sites?
-        st.write(response.text)
-        st_copy_to_clipboard(response.text, key="copy" + str(i))
+        # st.write(response.text)
+        # copyKey=str(i)+"COPY_BUTTON"
+        # button("Copy this review!", copyKey+".", on_click=on_copy_click(response.text), key=copyKey)
     my_bar.empty()
     st.balloons()
+    # st.write(st.session_state["review#1"])
+    # st.write()
+    # st.write(st.session_state["review#2"])
+    # st.write()
+    # st.write(st.session_state["review#3"])
+    # nav_to("http://localhost:8502/DisplayEndReviews")
+    switch_page("DisplayEndReviews")
     # if st.session_state['copy0'] or st.session_state['copy1'] or st.session_state['copy2']:
-    st.link_button("Give us a review on Google!",
-                   "https://www.google.com/search?client=firefox-b-d&q=gong+cha+davisville#lrd=0x882b3320b8abb05b:0xbff654876b9a8f56,3,,,,")
 
 
 main()

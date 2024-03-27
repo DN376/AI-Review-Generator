@@ -1,14 +1,12 @@
-# TODO: Generate the QR Code
-# TODO: move this to mobile
 # This is the entrypoint file and the start screen for users (Frontend)!
 # This'll be fairly barebones. as It's just a screen and a button to proceed to the next pages
 import streamlit as st
 from streamlit_extras.stateful_button import button
+from streamlit_extras.switch_page_button import switch_page
 
 # This sets the name of the store (Can be changed for different customers)
 # TODO: Instead of manually setting STORE_NAME, retrieve this from a file (likely .csv but it'll have formatting)
 # TODO: Create a README file and flesh out the github repo a bit more.
-# TODO: Turn this file into an app using Docker (Using the Streamlit Cloud doesn't work here (T_T) )
 STORE_NAME = "Gong Cha Davisville"
 
 # Sets a few variables that will carry across different pages.
@@ -71,7 +69,8 @@ def main():
     if counter != 0:
         st.session_state['userOptions'] = list(userOptions)
         st.write("")
-        st.page_link("pages/AskUserQuestions.py", label="Let's make an incredible review together!", icon="🧋")
+        if st.button("Let's make an incredible review together! 🧋", type= "primary"):
+            switch_page("AskUserQuestions")
 
 
 
