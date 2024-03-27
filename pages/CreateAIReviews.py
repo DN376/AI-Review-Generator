@@ -74,7 +74,7 @@ def main():
     # st.write(fewShotUser)
     # st.write(st.session_state['userInput'])
     # Initializes the model (the API key is contained in a .env file so that it remains secret)
-    co = cohere.Client("WYbq1RzI3MniGl2xfq6iG0vKC6JeIPUptalaJwcZ")
+    co = cohere.Client(COHERE_API_KEY)
     NUM_REVIEWS = 3  # The number of reviews that will be generated
     st.session_state["NUM_REVIEWS"] = NUM_REVIEWS
     # Displays a "Loading" bar & shows it to the user. Review number changes as reviews are created.
