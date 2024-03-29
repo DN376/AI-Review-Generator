@@ -27,7 +27,7 @@ def on_copy_click(text):
 
 
 def main():
-    st.set_page_config(page_title="Leave a review_text!", page_icon=":sparkles:", initial_sidebar_state="collapsed")
+    st.set_page_config(page_title="Leave a review!", page_icon=":sparkles:", initial_sidebar_state="collapsed")
     st.markdown(
         """
     <style>
