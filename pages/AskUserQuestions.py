@@ -55,7 +55,7 @@ def main():
                                     "Tasty", "Sweet", "Many Options", "Balanced"])
         # st.write(order)
         # st.write(fndOptions)
-        if order == "" or fndOptions == "":
+        if order == "" or fndOptions == "" or fndOptions is None:
             canProceed = False
 
     if "Atmosphere" in userOptions:  # Atmosphere
@@ -63,14 +63,14 @@ def main():
                                     ["Cozy", "Quiet", "Fun", "Great Music", "Clean", "Chic", "Casual",
                                      "Free Wifi", "Comfy", "Excellent"])
         # st.write(atmoOptions)
-        if atmoOptions == "":
+        if atmoOptions == "" or atmoOptions is None:
             canProceed = False
     if "Staff" in userOptions:  # Staff
         staffOptions = showQuestions("How would you describe our store's staff?", "Staff",
                                      ["Polite", "Friendly", "Fast Service", "Helpful", "Excellent", "Kind",
                                       "Patient", "Offered Free Samples", "Great Manager", "Impressive"])
         # st.write(staffOptions)
-        if staffOptions == "":
+        if staffOptions == "" or staffOptions is None:
             canProceed = False
 
     # Writes the customer's order (Debugging only !!)
@@ -114,6 +114,7 @@ def showQuestions(question, aspect, options):
     # allAttributes.write("This is where all possible attributes go")
 
     # Display all possible attributes (options)
+    gaveTraits = False
     userSelection = set()
     index = 0
     NUM_ATTRIBUTES_PER_LINE = 5
@@ -127,6 +128,7 @@ def showQuestions(question, aspect, options):
                 # st.write(key)
                 if button(option, key, key=key+"."):
                 # if cols[j].button(option, key):
+                    gaveTraits = True
                     userSelection.add(option)
                 else:
                     userSelection.discard(option)
@@ -139,13 +141,21 @@ def showQuestions(question, aspect, options):
         feedback += aspect.title() + " Keywords: " + traits
         # selectedAttributes.write("You've Selected: " + traits)
 
-    text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
+    gaveFeedback = False
+    text = st.text_input(label="Or write your own feedback here!", placeholder="Write here!", key=aspect)
     # For some reason, when the user hasn't input anything into the text box, text is set as True.
     # This contradicts Streamlit documentation AND the previous code (it should be None).
     # I don't know why this happens, but it's a simple fix, so: ???
     if text != "" and text is not True:
+        gaveFeedback = True
         feedback += aspect.title() + " Feedback: " + text
-    return feedback
+
+    if gaveTraits or gaveFeedback:
+        if gaveTraits != gaveFeedback:
+            return feedback
+        else:
+            st.write(":red[Cannot select keywords AND write a custom response!]")
+
 
 
 def displayMenu(question, aspect, options):
