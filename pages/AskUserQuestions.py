@@ -68,7 +68,7 @@ def main():
         staffOptions = showQuestions("How would you describe our store's staff?", "Staff",
                                      ["Polite", "Friendly", "Fast Service", "Helpful", "Excellent", "Kind",
                                       "Patient", "Offered Free Samples", "Great Manager", "Impressive"])
-        st.write(staffOptions)
+        # st.write("staffOptions -->" + str(staffOptions))
         if staffOptions == "" or staffOptions is None:
             canProceed = False
 
@@ -104,7 +104,7 @@ def main():
 #   [Aspect] Feedback: [If custom feedback is allowed, the user feedback will be placed here].
 def showQuestions(question, aspect, options):
     # Displays the interface for feedback.
-    feedback = ""
+    feedbackTraits = ""
     traits = ''
     st.header(question)
     st.write(":red[*required]")
@@ -138,23 +138,29 @@ def showQuestions(question, aspect, options):
         traits += (option + ", ")
     traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
     if traits != ".":
-        feedback += aspect.title() + " Keywords: " + traits
+        feedbackTraits += aspect.title() + " Keywords: " + traits
         # selectedAttributes.write("You've Selected: " + traits)
 
     gaveFeedback = False
+    feedbackWritten = ""
+    feedbackTitle = aspect.title() + " Feedback: "
+    if feedbackTitle not in st.session_state:
+        st.session_state[feedbackTitle] = ""
     text = st.text_input(label="Or write your own feedback here!", placeholder="Write here!", key=aspect)
     # For some reason, when the user hasn't input anything into the text box, text is set as True.
     # This contradicts Streamlit documentation AND the previous code (it should be None).
     # I don't know why this happens, but it's a simple fix, so: ???
     if text != "" and text is not True:
+        feedbackWritten += feedbackTitle + text
+        st.session_state[feedbackTitle] = feedbackWritten
+    if text == "":
+        st.session_state[feedbackTitle] = ""
+    if st.session_state[feedbackTitle] != "":
         gaveFeedback = True
-        feedback += aspect.title() + " Feedback: " + text
-
-    # st.write(gaveTraits)
-    # st.write(gaveFeedback)
+    feedbackWritten = st.session_state[feedbackTitle]
     if gaveTraits or gaveFeedback:
         if gaveTraits != gaveFeedback:
-            return feedback
+            return feedbackTraits + feedbackWritten
         else:
             st.write(":red[Cannot select keywords AND write a custom response!]")
 
