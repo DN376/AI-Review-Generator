@@ -7,7 +7,6 @@ from streamlit_extras.stateful_button import button
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 
-
 # if any session variables aren't loaded, send user back to the starting page
 if ('userOptions' not in st.session_state or
         'userInput' not in st.session_state or
@@ -55,7 +54,7 @@ def main():
                                     "Tasty", "Sweet", "Many Options", "Balanced"])
         # st.write(order)
         # st.write(fndOptions)
-        if order == "" or fndOptions == "":
+        if order == "" or fndOptions == "" or fndOptions is None:
             canProceed = False
 
     if "Atmosphere" in userOptions:  # Atmosphere
@@ -63,14 +62,14 @@ def main():
                                     ["Cozy", "Quiet", "Fun", "Great Music", "Clean", "Chic", "Casual",
                                      "Free Wifi", "Comfy", "Excellent"])
         # st.write(atmoOptions)
-        if atmoOptions == "":
+        if atmoOptions == "" or atmoOptions is None:
             canProceed = False
     if "Staff" in userOptions:  # Staff
         staffOptions = showQuestions("How would you describe our store's staff?", "Staff",
                                      ["Polite", "Friendly", "Fast Service", "Helpful", "Excellent", "Kind",
                                       "Patient", "Offered Free Samples", "Great Manager", "Impressive"])
-        # st.write(staffOptions)
-        if staffOptions == "":
+        # st.write("staffOptions -->" + str(staffOptions))
+        if staffOptions == "" or staffOptions is None:
             canProceed = False
 
     # Writes the customer's order (Debugging only !!)
@@ -86,7 +85,8 @@ def main():
         # Saves the feedback to use for generating the reviews
         userInput = order + fndOptions + atmoOptions + staffOptions
         st.session_state['userInput'] = userInput
-        st.page_link("pages/CreateAIReviews.py", label="Generate the Reviews!", icon="🌟")
+        if st.button("Generate the Reviews! 🌟", type="primary"):
+            switch_page("CreateAIReviews")
 
 
 # This function displays the questions for the user: Attributes (multiselect) or their custom message.
@@ -104,7 +104,7 @@ def main():
 #   [Aspect] Feedback: [If custom feedback is allowed, the user feedback will be placed here].
 def showQuestions(question, aspect, options):
     # Displays the interface for feedback.
-    feedback = ""
+    feedbackTraits = ""
     traits = ''
     st.header(question)
     st.write(":red[*required]")
@@ -114,6 +114,7 @@ def showQuestions(question, aspect, options):
     # allAttributes.write("This is where all possible attributes go")
 
     # Display all possible attributes (options)
+    gaveTraits = False
     userSelection = set()
     index = 0
     NUM_ATTRIBUTES_PER_LINE = 5
@@ -125,8 +126,9 @@ def showQuestions(question, aspect, options):
                 option = options[index]
                 key = aspect + option
                 # st.write(key)
-                if button(option, key, key=key+"."):
-                # if cols[j].button(option, key):
+                if button(option, key, key=key + "."):
+                    # if cols[j].button(option, key):
+                    gaveTraits = True
                     userSelection.add(option)
                 else:
                     userSelection.discard(option)
@@ -136,16 +138,31 @@ def showQuestions(question, aspect, options):
         traits += (option + ", ")
     traits = traits[:len(traits) - 2] + "."  # Separates the Keywords by comma and adds a period to the end.
     if traits != ".":
-        feedback += aspect.title() + " Keywords: " + traits
+        feedbackTraits += aspect.title() + " Keywords: " + traits
         # selectedAttributes.write("You've Selected: " + traits)
 
-    text = st.text_input(label="Or write your own feedback here! (optional)", placeholder="Write here!", key=aspect)
+    gaveFeedback = False
+    feedbackWritten = ""
+    feedbackTitle = aspect.title() + " Feedback: "
+    if feedbackTitle not in st.session_state:
+        st.session_state[feedbackTitle] = ""
+    text = st.text_input(label="Or write your own feedback here!", placeholder="Write here!", key=aspect)
     # For some reason, when the user hasn't input anything into the text box, text is set as True.
     # This contradicts Streamlit documentation AND the previous code (it should be None).
     # I don't know why this happens, but it's a simple fix, so: ???
     if text != "" and text is not True:
-        feedback += aspect.title() + " Feedback: " + text
-    return feedback
+        feedbackWritten += feedbackTitle + text
+        st.session_state[feedbackTitle] = feedbackWritten
+    if text == "":
+        st.session_state[feedbackTitle] = ""
+    if st.session_state[feedbackTitle] != "":
+        gaveFeedback = True
+    feedbackWritten = st.session_state[feedbackTitle]
+    if gaveTraits or gaveFeedback:
+        if gaveTraits != gaveFeedback:
+            return feedbackTraits + feedbackWritten
+        else:
+            st.write(":red[Cannot select keywords AND write a custom response!]")
 
 
 def displayMenu(question, aspect, options):
