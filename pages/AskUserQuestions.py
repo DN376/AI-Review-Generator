@@ -7,7 +7,6 @@ from streamlit_extras.stateful_button import button
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 
-
 # if any session variables aren't loaded, send user back to the starting page
 if ('userOptions' not in st.session_state or
         'userInput' not in st.session_state or
@@ -69,7 +68,7 @@ def main():
         staffOptions = showQuestions("How would you describe our store's staff?", "Staff",
                                      ["Polite", "Friendly", "Fast Service", "Helpful", "Excellent", "Kind",
                                       "Patient", "Offered Free Samples", "Great Manager", "Impressive"])
-        # st.write(staffOptions)
+        st.write(staffOptions)
         if staffOptions == "" or staffOptions is None:
             canProceed = False
 
@@ -86,7 +85,8 @@ def main():
         # Saves the feedback to use for generating the reviews
         userInput = order + fndOptions + atmoOptions + staffOptions
         st.session_state['userInput'] = userInput
-        st.page_link("pages/CreateAIReviews.py", label="Generate the Reviews!", icon="🌟")
+        if st.button("Generate the Reviews! 🌟", type="primary"):
+            switch_page("CreateAIReviews")
 
 
 # This function displays the questions for the user: Attributes (multiselect) or their custom message.
@@ -126,8 +126,8 @@ def showQuestions(question, aspect, options):
                 option = options[index]
                 key = aspect + option
                 # st.write(key)
-                if button(option, key, key=key+"."):
-                # if cols[j].button(option, key):
+                if button(option, key, key=key + "."):
+                    # if cols[j].button(option, key):
                     gaveTraits = True
                     userSelection.add(option)
                 else:
@@ -150,12 +150,13 @@ def showQuestions(question, aspect, options):
         gaveFeedback = True
         feedback += aspect.title() + " Feedback: " + text
 
+    # st.write(gaveTraits)
+    # st.write(gaveFeedback)
     if gaveTraits or gaveFeedback:
         if gaveTraits != gaveFeedback:
             return feedback
         else:
             st.write(":red[Cannot select keywords AND write a custom response!]")
-
 
 
 def displayMenu(question, aspect, options):
