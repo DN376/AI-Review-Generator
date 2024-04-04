@@ -17,7 +17,7 @@ if ('userOptions' not in st.session_state or
     switch_page("GreetingPage")
 
 load_dotenv()
-COHERE_API_KEY = os.getenv('COHERE_API_KEY')
+CO_API_KEY = os.getenv('CO_API_KEY')
 # TODO: find if ChatGPT or Cohere is better for this application. Currently, we're using Cohere because it's cheaper for
 #  testing purposes, but if ChatGPT's model is better than we should switch.
 systemMsg = """You are an assistant that helps customers write reviews for the store named """ + st.session_state[
@@ -74,7 +74,7 @@ def main():
     # st.write(fewShotUser)
     # st.write(st.session_state['userInput'])
     # Initializes the model (the API key is contained in a .env file so that it remains secret)
-    co = cohere.Client(COHERE_API_KEY)
+    co = cohere.Client(CO_API_KEY)
     NUM_REVIEWS = 3  # The number of reviews that will be generated
     st.session_state["NUM_REVIEWS"] = NUM_REVIEWS
     # Displays a "Loading" bar & shows it to the user. Review number changes as reviews are created.
