@@ -15,7 +15,16 @@ if ('userOptions' not in st.session_state or
 
 
 def main():
+
     st.set_page_config(page_title="Leave a review!", page_icon=":sparkles:", initial_sidebar_state="collapsed")
+    st.write('''<style>
+
+    [data-testid="column"] {
+        width: calc(33.3333% - 1rem) !important;
+        flex: 1 1 calc(33.3333% - 1rem) !important;
+        min-width: calc(33% - 1rem) !important;
+    }
+    </style>''', unsafe_allow_html=True)
     st.markdown(
         """
     <style>
@@ -117,7 +126,7 @@ def showQuestions(question, aspect, options):
     gaveTraits = False
     userSelection = set()
     index = 0
-    NUM_ATTRIBUTES_PER_LINE = 5
+    NUM_ATTRIBUTES_PER_LINE = 2
     numRows = (len(options) + NUM_ATTRIBUTES_PER_LINE - 1) // NUM_ATTRIBUTES_PER_LINE
     for i in range(numRows):
         cols = allAttributes.columns(NUM_ATTRIBUTES_PER_LINE)

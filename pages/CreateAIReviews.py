@@ -19,7 +19,7 @@ if ('userOptions' not in st.session_state or
 load_dotenv()
 COHERE_API_KEY = os.getenv('COHERE_API_KEY')
 # TODO: find if ChatGPT or Cohere is better for this application. Currently, we're using Cohere because it's cheaper for
-#  testing purposes, but if ChatGPT's model is better than we should switch
+#  testing purposes, but if ChatGPT's model is better than we should switch.
 systemMsg = """You are an assistant that helps customers write reviews for the store named """ + st.session_state[
     'storeName'] + """. 
     You will be given the customers' feedback and write a review based on what they say.
