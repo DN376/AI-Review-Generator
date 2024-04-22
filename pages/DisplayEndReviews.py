@@ -4,10 +4,25 @@ from streamlit_extras.switch_page_button import switch_page
 from st_copy_to_clipboard import st_copy_to_clipboard
 from streamlit_extras.stateful_button import button
 import textwrap as tw
+import webbrowser
+import pyperclip
+import time
 
 if 'NUM_REVIEWS' not in st.session_state:
     switch_page("GreetingPage")
 
+def navigate_and_paste(url):
+    # Open the URL in a web browser
+    webbrowser.open(url)
+
+    # Wait for the page to load (adjust this delay as needed)
+    time.sleep(10)
+
+    # Paste content from the clipboard
+    clipboard_content = pyperclip.paste()
+
+    # Print the pasted content
+    print("Pasted content from clipboard:", clipboard_content)
 
 def on_copy_click(text):
     st.markdown(f'<button id="copy-button" onclick="copyToClipboard(\'{text}\')">Copy Text</button>', unsafe_allow_html=True)
@@ -52,8 +67,10 @@ def main():
             )
         ), None)
 
-    st.link_button("Give us a review on Google!",
-                   "https://www.google.com/search?client=firefox-b-d&q=gong+cha+davisville#lrd=0x882b3320b8abb05b:0xbff654876b9a8f56,3,,,,")
+    if st.button("Give us a review on Google!"):
+        navigate_and_paste("https://www.google.com/search?client=firefox-b-d&q=gong+cha+davisville#lrd=0x882b3320b8abb05b:0xbff654876b9a8f56,3,,,,")
+    # st.link_button("Give us a review on Google!",
+    #                "https://www.google.com/search?client=firefox-b-d&q=gong+cha+davisville#lrd=0x882b3320b8abb05b:0xbff654876b9a8f56,3,,,,")
 
 
 main()
